@@ -1,0 +1,137 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+# any number without decimal space is integer
+a=2
+type(a)
+c=-10
+type(c)
+####Float####
+# any number with decimal values is float4
+b = 123.4567
+type(b)
+# string
+# any value within quotes
+s = "god"
+type(s)
+s1 = 'god'# can use single quotes
+type(s1)
+s2 = "999"# even number within quotes is a string
+type(s2)
+#s2 + 5 thows an error
+int(s2) + 5
+int(s) # throws an error as god could not be converted as an integer
+s3 = "g" # even single character is a string
+type(s3)
+
+str1 = "rama"
+str2 = "ravana"
+
+concat_str = str1 + " Killed "+ str2
+print(concat_str)
+print(len(str1)) # num of characters in a string
+len(str2)
+
+
+
+##### Boolean #####
+f = True
+type(f)
+# g = true  # python is case sensitive
+h=False
+H = True
+# output of conditions are Boolean
+5>6
+6>5
+5 == 6 # == for equality check
+5 == 5
+"god"== "god"
+"god"== "God"
+"god"== "ogd"
+
+# more than one condition exe using and , or operators
+(6>5) and (5>7)
+(6>5) and (7>8)
+(6>5) or (7>8)
+# or operator will check either of the conditions
+# filp a boolean
+not(6 == 5)
+not((6>5) and (7>8))
+not(6>5) and (7>8)
+
+
+##### Complex #############
+
+h = 5 + 10j
+type(h)
+m = 5 - 10j
+h*m
+abs(h*m)
+
+##### type Casting
+int(10.5)
+float(3)
+int("999")
+int("05")
+# int("god") throws error 
+
+###########Save set of values##########
+## Tuple
+tup1 = (1,2,3,4,5)
+type(tup1)
+tup2 = ("rama","Ravana","Sita")
+# mix of data types are allowed in an array
+tup3 = (1,2,"god",5,67,True,6+10j)
+
+#Tuple slicing by position
+# [] for slicing
+# position starts with 0
+tup1[0]
+tup1[1]
+
+# tuples are immutable
+#
+# tup1[2] = 100 throws error
+
+########################List###########
+l1 = [1,2,3,4,5]
+type(l1)
+l1[2] = 100 # values in the list can be changed
+l2 = [1,2,"god",5,67,True,6+10j]
+
+# concatenate 2 lists using +
+l4 = l1 + l2
+print(l4)
+
+# appending a value
+l1.append(100)
+print(l1)
+
+# dat simulation
+l4 = list(range(100))
+len(l4)
+l5 = list(range(1,101))
+l6 = list(range(1,101,2))
+
+five_rep_100 = [5]*100
+print(five_rep_100)
+one_two_five = list(range(1,6))*20
+print(one_two_five)
+
+# List Slicing
+l6[0]
+l6[len(l6) - 1]
+   
+l6[-1] # Negative Indexing
+l6[-2] # Last but one
+l6[5:11] # 5th to 10th position
+l6[5:] ##5th to last position
+l6[:6] #oth to 5th position
+l6[1:-1] #1st to last but one
+l6[0:2] + l6[-2:] #
+
+
+
