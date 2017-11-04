@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import os
 
-airquality_data = pd.read_csv("E:\\airquality.csv")
+airquality_data = pd.read_csv("E:\\Python Class\\Assignments\\airquality.csv")
 
 
 #Data Frame Properties and Quality Check

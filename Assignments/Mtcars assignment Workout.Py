@@ -8,7 +8,7 @@ Created on Sun Oct 22 08:21:02 2017
 import pandas as pd
 import numpy as np
 import os
-mtcars_data = pd.read_csv("E:\\mtcars.csv")
+mtcars_data = pd.read_csv("E:\\Python Class\\Assignments\\mtcars.csv")
 
 #Data Frame properties and quality check
 #Q3
@@ -45,6 +45,9 @@ np.mean(mtcars_data.loc[(mtcars_data["mpg"] > np.mean(mtcars_data["mpg"])) &
 #Q14
 print("Entire row of the vehicle which has the highest miles per gallon: ",
 mtcars_data.loc[mtcars_data["mpg"] == mtcars_data["mpg"].max(),:])
+
+#or
+mtcars_data.iloc[mtcars_data["mpg"].idxmax(),:]
 #Q15
 # Entire row of vehicle with the highest horsepower 
 highest_hp = mtcars_data.loc[mtcars_data["hp"] == mtcars_data["hp"].max(),:]
