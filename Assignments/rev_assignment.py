@@ -41,7 +41,8 @@ yearly_up_rate = civun_data["Civilian Labor Force"] / civun_data["Unemployment"]
 
 #6 Repeat a similar aggregation as previous point for State Level unemployment rate                
 
-state_grp = emp_data_clean.groupby(['State FIPS Code']) 
+state_grp = emp_data_clean.groupby(['State FIPS Code'])
+print(state_grp) 
 civun_data1 = state_grp[["Civilian Labor Force","Unemployment"]].agg(np.sum)
 state_up_rate = civun_data1["Civilian Labor Force"] / civun_data1["Unemployment"]
 
@@ -60,6 +61,8 @@ civun_data2 = state_grp[["Civilian Labor Force","State FIPS Code"]].agg(np.max)
 civun_data2_sorted = civun_data2.sort_values("Civilian Labor Force",ascending = False).head(4)
 civun_data3 = emp_data_clean.loc[(emp_data_clean["State FIPS Code"].isin(civun_data2_sorted["State FIPS Code"])),:]
 civun_data3.boxplot(column="Unemployment Rate",by="State FIPS Code")
+
+s = emp_data_clean.loc[(emp_data_clean["State FIPS Code"].isin(1),:]
 
 #9Visualize the relationship between civilian labor force and unemployment rate using
 #scatter plot
