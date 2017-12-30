@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans #SciKit Learn
 from scipy.spatial.distance import cdist
-
+import os
 # Step 1: Do an exploratory analysis of Variables/Features
 # Step 2: Build clusters (kmeans clustering)
 # Step 3: Evaluate cluster
@@ -18,7 +18,8 @@ from scipy.spatial.distance import cdist
 # Step 6: Cluster Profiling
 
 # data with measurements of features in iris flower species
-irisdata_with_label = pd.read_csv("data/iris.csv")
+os.chdir('E:\Python Class\Data')
+irisdata_with_label = pd.read_csv("iris.csv")
 
 ## Step 1: Exploratory Analysis
 newiris = irisdata_with_label.iloc[:,0:4]
