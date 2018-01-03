@@ -9,6 +9,8 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+import os
 
 #nltk.download() # download popular packages
 
@@ -109,6 +111,7 @@ text_classification(x_train_tf,y_train,x_test_tf,y_test) #83.33%
 text_classification(x_train_tf,y_train,x_test_tf,y_test,DecisionTreeClassifier())
 
 ###############  Assignment #########################
+os.chdir("E:\Python Class")
 # Happy training
 f = open("data/happy.txt","r",encoding='utf8')
 happy_train = f.readlines()
@@ -131,6 +134,56 @@ f.close()
 
 ###### Solution ############################################
 
+All_data = happy_train + sad_train + happy_test + sad_test
+ss = ["Happy"]*90
+ss_1 = ["Sad"]*90
+Sentiment = ss[0:80] + ss_1[0:80] + ss[80:90] + ss_1[80:90]
+
+### FEATURE EXTRACTION
+feature_algo = TfidfVectorizer()
+text_features_1 = feature_algo.fit_transform(All_data)
+print(text_features_1)
+feature_algo.vocabulary_
+
+# Removing stop words
+feature_algo_wo_stopwords = TfidfVectorizer(stop_words='english')
+text_features_wo_stopwords = feature_algo_wo_stopwords.fit_transform(All_data)
+feature_algo_wo_stopwords.vocabulary_
+
+# IDV
+X_train = text_features_wo_stopwords[:160,:] # extracting first 160 text for training
+X_test = text_features_wo_stopwords[160:,:] # extracting remaining 20 text for testing
+# DV
+y_train = Sentiment[:160]
+y_test = Sentiment[160:]
+
+nb_model = MultinomialNB().fit(X_train,y_train)
+y_predicted = nb_model.predict(X_test)
+
+pd.crosstab(y_predicted,np.array(y_test),
+            rownames = ["Predicted Sentiment"],
+            colnames = ["Actual Sentiment"])
+
+accuracy_score(y_test,y_predicted)
+
+#90% accuracy
+
+def text_classification(training_features,training_class,test_features,test_class,algo =  MultinomialNB() ):
+    model = algo.fit(training_features,training_class)
+    predicted_class = nb_model.predict(test_features)
+    conf_matrix = pd.crosstab(predicted_class,np.array(test_class),
+                              rownames = ["Predicted Sentiment"],
+                              colnames = ["Actual Sentiment"])
+    print(conf_matrix)
+    print("Accuracy = ",accuracy_score(test_class,predicted_class)*100)
+
+#Decision Tree
+text_classification(X_train,y_train,X_test,y_test,DecisionTreeClassifier())
+# 90% accuracy
+
+#KNN Classifier
+text_classification(X_train,y_train,X_test,y_test,KNeighborsClassifier())
+# 90% accuracy
 
 ########### NLTK ################################################
 

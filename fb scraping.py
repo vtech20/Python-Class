@@ -6,8 +6,6 @@ Created on Sat Dec 30 15:30:06 2017
 """
 
 
-
-
 import urllib
 from urllib.request import urlopen
 import json
