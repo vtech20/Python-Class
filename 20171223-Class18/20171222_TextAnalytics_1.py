@@ -2,16 +2,15 @@
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 import pandas as pd
 import numpy as np
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem.porter import PorterStemmer
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-import os
-#textblob is the corpus to use the pre existing sentiment based on sentences
+
 
 #nltk.download() # download popular packages
 
@@ -68,7 +67,7 @@ y_train = sentiment[:10]
 y_test = sentiment[10:]
 
 # Building model on training data
-#Multinomial Naive Bayes classification Algorithm
+# Multinomial Naive Baye's CLassification Algorithm
 nb_model = MultinomialNB().fit(X_train,y_train)
 
 # EValuate the model on test data
@@ -84,8 +83,8 @@ accuracy_score(y_test,y_predicted)
 
 ## Generic classification function
 def text_classification(training_features,training_class,test_features,test_class,algo =  MultinomialNB() ):
-    nb_model = algo.fit(training_features,training_class)
-    predicted_class = nb_model.predict(test_features)
+    text_classifier_model = algo.fit(training_features,training_class)
+    predicted_class = text_classifier_model.predict(test_features)
     conf_matrix = pd.crosstab(predicted_class,np.array(test_class),
                               rownames = ["Predicted Sentiment"],
                               colnames = ["Actual Sentiment"])
@@ -93,26 +92,23 @@ def text_classification(training_features,training_class,test_features,test_clas
     print("Accuracy = ",accuracy_score(test_class,predicted_class)*100)
 
 text_classification(X_train,y_train,X_test,y_test) #66.6% accuracy
+text_classification(X_train,y_train,X_test,y_test,KNeighborsClassifier()) #50% accuracy
+text_classification(X_train,y_train,X_test,y_test,DecisionTreeClassifier()) #83.3% accuracy
 
 # IDV without stopwords
 X_train_wo_stopwords = text_features_wo_stopwords[:10,:]
 X_test_wo_stopwords = text_features_wo_stopwords[10:,:] 
 
 text_classification(X_train_wo_stopwords,y_train,X_test_wo_stopwords,y_test) #83.33%
+text_classification(X_train_wo_stopwords,y_train,X_test_wo_stopwords,y_test,DecisionTreeClassifier()) #83.33%
 
-#Idv with Term frequency
-x_train_tf = text_features_tf[:10,:]
-x_test_tf = text_features_tf[10:,:]
+# IDV with term frequncy
+X_train_tf= text_features_tf[:10,:]
+X_test_tf = text_features_tf[10:,:] 
+text_classification(X_train_tf,y_train,X_test_tf,y_test)  #83.3
 
-text_classification(x_train_tf,y_train,x_test_tf,y_test) #83.33%
-
-#Using other models
-
-#DecisionTreeClassifier
-text_classification(x_train_tf,y_train,x_test_tf,y_test,DecisionTreeClassifier())
 
 ###############  Assignment #########################
-os.chdir("E:\Python Class")
 # Happy training
 f = open("data/happy.txt","r",encoding='utf8')
 happy_train = f.readlines()
@@ -134,60 +130,47 @@ f.close()
 # Test the model on test data
 
 ###### Solution ############################################
+tweets = happy_train + sad_train + happy_test + sad_test
+sentiment = ["happy"]*80 + ["sad"]*80 + ["happy"]*10 + ["sad"]*10
 
-All_data = happy_train + sad_train + happy_test + sad_test
-ss = ["Happy"]*90
-ss_1 = ["Sad"]*90
-Sentiment = ss[0:80] + ss_1[0:80] + ss[80:90] + ss_1[80:90]
+# features without stop words
+text_feature_tf_withoutstopwords = TfidfVectorizer(stop_words='english',
+                                  use_idf = False,
+                                  norm = None).\
+                                  fit_transform(tweets)
+text_feature_tf_withoutstopwords_mat = text_feature_tf_withoutstopwords.toarray()
 
-### FEATURE EXTRACTION
-feature_algo = TfidfVectorizer()
-text_features_1 = feature_algo.fit_transform(All_data)
-print(text_features_1)
-feature_algo.vocabulary_
+# features with stop words
+text_feature_tf_withstopwords = TfidfVectorizer(stop_words=None,
+                                  use_idf = None,
+                                  norm = None).\
+                                  fit_transform(tweets)                                   
+text_feature_tf_withstopwords_mat = text_feature_tf_withstopwords.toarray()
 
-# Removing stop words
-feature_algo_wo_stopwords = TfidfVectorizer(stop_words='english',use_idf = None,norm = None)
-text_features_wo_stopwords = feature_algo_wo_stopwords.fit_transform(All_data)
-feature_algo_wo_stopwords.vocabulary_
 
-# IDV
-X_train = text_features_wo_stopwords[:160,:] # extracting first 160 text for training
-X_test = text_features_wo_stopwords[160:,:] # extracting remaining 20 text for testing
-# DV
-y_train = Sentiment[:160]
-y_test = Sentiment[160:]
+# tfidf features 
+text_feature_tfidf_withstopwords = TfidfVectorizer(stop_words=None,
+                                  use_idf = True,
+                                  norm = None).\
+                                  fit_transform(tweets)                                   
+text_feature_tfidf_withstopwords_mat = text_feature_tfidf_withstopwords.toarray()
 
-nb_model = MultinomialNB().fit(X_train,y_train)
-y_predicted = nb_model.predict(X_test)
 
-pd.crosstab(y_predicted,np.array(y_test),
-            rownames = ["Predicted Sentiment"],
-            colnames = ["Actual Sentiment"])
-
-accuracy_score(y_test,y_predicted)
-
-#90% accuracy
-
-def text_classification(training_features,training_class,test_features,test_class,algo =  MultinomialNB() ):
-    model = algo.fit(training_features,training_class)
-    predicted_class = nb_model.predict(test_features)
-    conf_matrix = pd.crosstab(predicted_class,np.array(test_class),
-                              rownames = ["Predicted Sentiment"],
-                              colnames = ["Actual Sentiment"])
-    print(conf_matrix)
-    print("Accuracy = ",accuracy_score(test_class,predicted_class)*100)
-
-#Decision Tree
-text_classification(X_train,y_train,X_test,y_test,DecisionTreeClassifier())
-# 90% accuracy
-
-#KNN Classifier
-text_classification(X_train,y_train,X_test,y_test,KNeighborsClassifier())
-# 90% accuracy
+text_classification(text_feature_tf_withoutstopwords[:160,:],
+                    sentiment[:160],
+                    text_feature_tf_withoutstopwords[160:180,:],
+                    sentiment[160:180])
+text_classification(text_feature_tf_withstopwords[:160,:],
+                    sentiment[:160],
+                    text_feature_tf_withstopwords[160:180,:],
+                    sentiment[160:180])
+text_classification(text_feature_tfidf_withstopwords[:160,:],
+                    sentiment[:160],
+                    text_feature_tfidf_withstopwords[160:180,:],
+                    sentiment[160:180])
 
 ########### NLTK ################################################
-
+# Natural Language Toolkit
 ### word tokenization
 text = " this is Python class"
 text_tokenized = word_tokenize(text)
